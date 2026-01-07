@@ -1,0 +1,6 @@
+@SemPaiGo_HostAddress = http://localhost:5152
+
+GET {{SemPaiGo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
