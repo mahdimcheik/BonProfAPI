@@ -109,7 +109,7 @@ public class UserCreate
     public Guid GenderId { get; set; }
 
     public TeacherCreate? Teacher { get; set; }
-    // public StudentCreate? Student { get; set; }
+    public StudentCreate? Student { get; set; }
 }
 
 public class PasswordReset
@@ -186,6 +186,7 @@ public class UserUpdate
     public Guid GenderId { get; set; }
     public List<Guid> LanguagesIds { get; set; }
     public TeacherUpdate? Teacher { get; set; }
+    public StudentUpdate? Student { get; set; }
 
     public void UpdateUser(UserApp user, List<Language> languages)
     {
@@ -195,9 +196,14 @@ public class UserUpdate
         user.GenderId = GenderId;
         user.Languages.Clear();
         user.Languages = languages.Where(l => LanguagesIds.Any(lid => l.Id == lid )).ToList();
-        if (user.Teacher is not null)
+        if (user.Teacher is not null && Teacher is not null) 
         {
             Teacher.UpdateTeacher(user.Teacher);
+        }
+
+        if (user.Student is not null && Student is not null)
+        {
+            Student.UpdateStudent(user.Student);
         }
     }
 }

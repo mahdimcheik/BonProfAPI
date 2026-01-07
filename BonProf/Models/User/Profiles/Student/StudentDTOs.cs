@@ -4,16 +4,25 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BonProf.Models;
 
-public class StudentDetails : BaseModel
+public class StudentDetails 
 {
-    /// <summary>
-    /// Identifiant unique du profil enseignant
-    /// </summary>
     [Required]
     public Guid Id { get; set; }
 
     public StudentDetails(Student student)
     {
         Id = student.Id;
+    }
+}
+
+public class StudentCreate
+{
+    public StudentCreate() { }
+}
+
+public class StudentUpdate 
+{
+    public void UpdateStudent(Student student)
+    {
     }
 }
