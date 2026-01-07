@@ -108,7 +108,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new Gender
             {
                 Id = HardCode.GENDER_FEMALE,
-                Name = "Female",
+                Name = "Femme",
                 Color = "#ff69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -116,7 +116,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new Gender
             {
                 Id = HardCode.GENDER_MALE,
-                Name = "Male",
+                Name = "Homme",
                 Color = "#fa69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -124,7 +124,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new Gender
             {
                 Id = HardCode.GENDER_OTHER,
-                Name = "Other",
+                Name = "Autres",
                 Color = "#ab69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -139,7 +139,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new StatusAccount
             {
                 Id = HardCode.ACCOUNT_ACTIVE,
-                Name = "Active",
+                Name = "Actif",
                 Color = "#ff69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -147,7 +147,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new StatusAccount
             {
                 Id = HardCode.ACCOUNT_PENDING,
-                Name = "Pending",
+                Name = "En attente",
                 Color = "#fa69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -155,7 +155,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new StatusAccount
             {
                 Id = HardCode.ACCOUNT_BANNED,
-                Name = "Banned",
+                Name = "Banni",
                 Color = "#ab69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -167,8 +167,8 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
         {
             new TypeAddress
             {
-                Id = HardCode.TYPE_ADDRESS_HOME,
-                Name = "Home",
+                Id = HardCode.TYPE_ADDRESS_MAIN,
+                Name = "Principale",
                 Color = "#ff69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -176,7 +176,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new TypeAddress
             {
                 Id = HardCode.TYPE_ADDRESS_BILLING,
-                Name = "Billing",
+                Name = "Facturation",
                 Color = "#fa69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -193,7 +193,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new StatusTransaction
             {
                 Id = HardCode.STATUS_TRANSACTION_PENDING,
-                Name = "Pending",
+                Name = "En Attente",
                 Color = "#ff69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -201,7 +201,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new StatusTransaction
             {
                 Id = HardCode.STATUS_TRANSACTION_PAID,
-                Name = "Paid",
+                Name = "Payé",
                 Color = "#fa69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -209,7 +209,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new StatusTransaction
             {
                 Id = HardCode.STATUS_TRANSACTION_FAILED,
-                Name = "Failed",
+                Name = "Échoué",
                 Color = "#ab69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -224,7 +224,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new TypeTeacherTransaction
             {
                 Id = HardCode.TYPE_TEACHER_TRANSACTION_PAYMENT,
-                Name = "Payment",
+                Name = "Paiement",
                 Color = "#ff69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -232,7 +232,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new TypeTeacherTransaction
             {
                 Id = HardCode.TYPE_TEACHER_TRANSACTION_PAYOUT,
-                Name = "Payout",
+                Name = "Payé",
                 Color = "#fa69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -240,7 +240,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new TypeTeacherTransaction
             {
                 Id = HardCode.TYPE_TEACHER_TRANSACTION_REFUND,
-                Name = "Refund",
+                Name = "Remboursement",
                 Color = "#ab69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -255,7 +255,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new StatusReservation
             {
                 Id = HardCode.RESERVATION_PENDING,
-                Name = "Pendind",
+                Name = "En Attente",
                 Color = "#ff69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -263,7 +263,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new StatusReservation
             {
                 Id = HardCode.RESERVATION_ACCEPTED,
-                Name = "Accepted",
+                Name = "Acceptée",
                 Color = "#fa69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -271,7 +271,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new StatusReservation
             {
                 Id = HardCode.RESERVATION_DONE,
-                Name = "Done",
+                Name = "Finie",
                 Color = "#ab69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -279,7 +279,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             new StatusReservation
             {
                 Id = HardCode.RESERVATION_REJECTED,
-                Name = "Rejected",
+                Name = "Rejectée",
                 Color = "#ab69b4",
                 Icon = "",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -411,7 +411,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             {
                 Id = HardCode.TYPE_SLOT_VISIO,
                 Name = "Visio",
-                Color = "#fa69b4",
+                Color = "#aa69b4",
                 Icon = "pi pi-desktop",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             },
@@ -419,7 +419,7 @@ public class MainContext : IdentityDbContext<UserApp, RoleApp, Guid>
             {
                 Id = HardCode.TYPE_SLOT_ALL,
                 Name = "Tous",
-                Color = "#fa69b4",
+                Color = "#1169b4",
                 Icon = "pi pi-crown",
                 CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             },

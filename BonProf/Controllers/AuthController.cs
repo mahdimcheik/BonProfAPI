@@ -7,7 +7,7 @@ using BonProf.Models;
 using BonProf.Services;
 using BonProf.Utilities;
 
-namespace SemPaiGo.Controllers;
+namespace BonProf.Controllers;
 
 [Produces("application/json")]
 [Consumes("application/json")]

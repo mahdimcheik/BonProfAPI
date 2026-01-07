@@ -47,7 +47,7 @@ public static class HardCode
     public static Guid TYPE_TEACHER_TRANSACTION_REFUND => Guid.Parse("50412518-6c82-40c1-b6bf-b9c7aadf67d1");
 
     // Type addresses
-    public static Guid TYPE_ADDRESS_HOME => Guid.Parse("e1fee3ea-6190-48c3-8e40-c1f053fea79d");
+    public static Guid TYPE_ADDRESS_MAIN => Guid.Parse("e1fee3ea-6190-48c3-8e40-c1f053fea79d");
     public static Guid TYPE_ADDRESS_BILLING => Guid.Parse("b8b8a8fc-ca60-440b-815f-1e44b89c9803");
 
     // Type slots

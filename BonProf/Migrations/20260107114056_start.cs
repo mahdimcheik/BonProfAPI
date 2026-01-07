@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BonProf.Migrations
 {
     /// <inheritdoc />
-    public partial class reset : Migration
+    public partial class start : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -228,16 +228,16 @@ namespace BonProf.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    FirstName = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ImgUrl = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     DataProcessingConsent = table.Column<bool>(type: "boolean", nullable: false),
                     PrivacyPolicyConsent = table.Column<bool>(type: "boolean", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     ArchivedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     StatusId = table.Column<Guid>(type: "uuid", nullable: false),
-                    FirstName = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
-                    LastName = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ImgUrl = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     GenderId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -848,9 +848,9 @@ namespace BonProf.Migrations
                 columns: new[] { "Id", "ArchivedAt", "Color", "CreatedAt", "Icon", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { new Guid("b07b2445-f39c-4b26-8ffe-e40fe561d8bc"), null, "#ab69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Other", null },
-                    { new Guid("b68c151b-db34-462d-a65c-90989cc96e5e"), null, "#ff69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Female", null },
-                    { new Guid("dcb8b01b-205a-4ea2-a281-004a7b1bb972"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Male", null }
+                    { new Guid("b07b2445-f39c-4b26-8ffe-e40fe561d8bc"), null, "#ab69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Autres", null },
+                    { new Guid("b68c151b-db34-462d-a65c-90989cc96e5e"), null, "#ff69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Femme", null },
+                    { new Guid("dcb8b01b-205a-4ea2-a281-004a7b1bb972"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Homme", null }
                 });
 
             migrationBuilder.InsertData(
@@ -890,9 +890,9 @@ namespace BonProf.Migrations
                 columns: new[] { "Id", "ArchivedAt", "Color", "CreatedAt", "Icon", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { new Guid("12e65875-bec4-422a-aad4-c28de0e06fff"), null, "#ff69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Active", null },
-                    { new Guid("acc9ddb6-824b-42cb-8276-5d91b6af2003"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Pending", null },
-                    { new Guid("fd2621ef-85f0-46a6-acdd-c77fb111630f"), null, "#ab69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Banned", null }
+                    { new Guid("12e65875-bec4-422a-aad4-c28de0e06fff"), null, "#ff69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Actif", null },
+                    { new Guid("acc9ddb6-824b-42cb-8276-5d91b6af2003"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "En attente", null },
+                    { new Guid("fd2621ef-85f0-46a6-acdd-c77fb111630f"), null, "#ab69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Banni", null }
                 });
 
             migrationBuilder.InsertData(
@@ -900,10 +900,10 @@ namespace BonProf.Migrations
                 columns: new[] { "Id", "ArchivedAt", "Color", "CreatedAt", "Icon", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { new Guid("2ec60a91-aab8-4753-a5d8-b131b9441e77"), null, "#ff69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Pendind", null },
-                    { new Guid("32d854b6-6d4e-445a-9209-31a492970f2d"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Accepted", null },
-                    { new Guid("6d281aec-d093-4071-8bf4-c8363361b5b4"), null, "#ab69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Done", null },
-                    { new Guid("caab85f5-d37b-4ea0-b035-5ba3ca8dd49f"), null, "#ab69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Rejected", null }
+                    { new Guid("2ec60a91-aab8-4753-a5d8-b131b9441e77"), null, "#ff69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "En Attente", null },
+                    { new Guid("32d854b6-6d4e-445a-9209-31a492970f2d"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Acceptée", null },
+                    { new Guid("6d281aec-d093-4071-8bf4-c8363361b5b4"), null, "#ab69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Finie", null },
+                    { new Guid("caab85f5-d37b-4ea0-b035-5ba3ca8dd49f"), null, "#ab69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Rejectée", null }
                 });
 
             migrationBuilder.InsertData(
@@ -911,9 +911,9 @@ namespace BonProf.Migrations
                 columns: new[] { "Id", "ArchivedAt", "Color", "CreatedAt", "Icon", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { new Guid("584f233a-bf58-4db9-a24e-90baac3f6d42"), null, "#ab69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Failed", null },
-                    { new Guid("73f7fa42-196b-4040-b727-64a7b1e56458"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Paid", null },
-                    { new Guid("ead0ecc1-a58d-4436-a87f-89c2dbc665a8"), null, "#ff69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Pending", null }
+                    { new Guid("584f233a-bf58-4db9-a24e-90baac3f6d42"), null, "#ab69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Échoué", null },
+                    { new Guid("73f7fa42-196b-4040-b727-64a7b1e56458"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Payé", null },
+                    { new Guid("ead0ecc1-a58d-4436-a87f-89c2dbc665a8"), null, "#ff69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "En Attente", null }
                 });
 
             migrationBuilder.InsertData(
@@ -921,8 +921,8 @@ namespace BonProf.Migrations
                 columns: new[] { "Id", "ArchivedAt", "Color", "CreatedAt", "Icon", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { new Guid("b8b8a8fc-ca60-440b-815f-1e44b89c9803"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Billing", null },
-                    { new Guid("e1fee3ea-6190-48c3-8e40-c1f053fea79d"), null, "#ff69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Home", null }
+                    { new Guid("b8b8a8fc-ca60-440b-815f-1e44b89c9803"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Facturation", null },
+                    { new Guid("e1fee3ea-6190-48c3-8e40-c1f053fea79d"), null, "#ff69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Principale", null }
                 });
 
             migrationBuilder.InsertData(
@@ -930,9 +930,9 @@ namespace BonProf.Migrations
                 columns: new[] { "Id", "ArchivedAt", "Color", "CreatedAt", "Icon", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { new Guid("4043e32b-4d92-49b5-b885-505155ff2fe9"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "pi pi-desktop", "Visio", null },
+                    { new Guid("4043e32b-4d92-49b5-b885-505155ff2fe9"), null, "#aa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "pi pi-desktop", "Visio", null },
                     { new Guid("79f538c3-5f2b-4e45-a5f8-4d7cda8b3df8"), null, "#ff69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "pi pi-arrow-down-left-and-arrow-up-right-to-center", "Presentiel", null },
-                    { new Guid("c25c18a2-af88-4132-a27a-0025417edb56"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "pi pi-crown", "Tous", null }
+                    { new Guid("c25c18a2-af88-4132-a27a-0025417edb56"), null, "#1169b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "pi pi-crown", "Tous", null }
                 });
 
             migrationBuilder.InsertData(
@@ -940,9 +940,9 @@ namespace BonProf.Migrations
                 columns: new[] { "Id", "ArchivedAt", "Color", "CreatedAt", "Icon", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { new Guid("27aec3d1-dd41-4728-a29e-473da46779d9"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Payout", null },
-                    { new Guid("50412518-6c82-40c1-b6bf-b9c7aadf67d1"), null, "#ab69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Refund", null },
-                    { new Guid("7305a3d5-bfa9-41ce-be10-174c406cb842"), null, "#ff69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Payment", null }
+                    { new Guid("27aec3d1-dd41-4728-a29e-473da46779d9"), null, "#fa69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Payé", null },
+                    { new Guid("50412518-6c82-40c1-b6bf-b9c7aadf67d1"), null, "#ab69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Remboursement", null },
+                    { new Guid("7305a3d5-bfa9-41ce-be10-174c406cb842"), null, "#ff69b4", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "", "Paiement", null }
                 });
 
             migrationBuilder.CreateIndex(

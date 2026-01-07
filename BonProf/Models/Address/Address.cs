@@ -40,7 +40,7 @@ public class Address : BaseModel
     
     [Required]
     [ForeignKey(nameof(Type))]
-    public Guid TypeId { get; set; } = HardCode.TYPE_ADDRESS_HOME;
+    public Guid TypeId { get; set; } = HardCode.TYPE_ADDRESS_MAIN;
     public TypeAddress? Type { get; set; }
     
     public Address()
@@ -59,7 +59,7 @@ public class Address : BaseModel
         Longitude = addressDto.Longitude;
         Latitude = addressDto.Latitude;
         UserId = addressDto.UserId;
-        TypeId = HardCode.TYPE_ADDRESS_HOME;
+        TypeId = HardCode.TYPE_ADDRESS_MAIN;
         CreatedAt = DateTimeOffset.UtcNow;
     }
     

@@ -2,7 +2,7 @@
 using BonProf.Models;
 using BonProf.Services;
 
-namespace SemPaiGo.Controllers
+namespace BonProf.Controllers
 {
     [Route("[controller]")]
     [ApiController]
