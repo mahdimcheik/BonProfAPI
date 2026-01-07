@@ -32,7 +32,9 @@ public class TeacherService
             var profiles = await _context
                 .Users
                 .Include(p => p.Teacher)
+                .ThenInclude(t => t.Cursuses)
                 .Include(p => p.Languages)
+                .Include(p => p.Gender)
                 .ToListAsync();
 
             return new Response<List<UserDetails>>
@@ -74,6 +76,11 @@ public class TeacherService
                 .Include(p => p.Gender)
                 .Include(p => p.Languages)
                 .Include(p => p.Teacher)
+                .ThenInclude((t => t.Cursuses))
+                .ThenInclude(c => c.Level)
+                .Include(p => p.Teacher)
+                .ThenInclude((t => t.Cursuses))
+                .ThenInclude(c => c.Categories)
                 .Include(p => p.Addresses)
                 .FirstOrDefaultAsync();
             
@@ -85,11 +92,14 @@ public class TeacherService
                     Message = "Profil enseignant non trouv�",
                 };
             }
+            
+            var rolesDetailed =  await CheckUser.GetRoles(user, _context,_userManager);
+            
             return new Response<UserDetails>
             {
                 Status = 200,
                 Message = "Profil enseignant r�cup�r� avec succ�s",
-                Data = new UserDetails(teacher, null),
+                Data = new UserDetails(teacher, rolesDetailed),
             };
         }
         catch (Exception ex)
@@ -113,6 +123,9 @@ public class TeacherService
                 .Users
                 .Where(p => p.Id == userId)
                 .Include(p => p.Teacher)
+                .ThenInclude(t => t.Cursuses)
+                .Include(p => p.Gender)
+                .Include(p => p.Languages)
                 .FirstOrDefaultAsync();
             if (teacher == null)
             {

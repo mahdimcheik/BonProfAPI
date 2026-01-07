@@ -46,5 +46,18 @@ public class CheckUser
         return (user, user is null);
     }
 
+
+    public static async Task<List<RoleDetails>> GetRoles(UserApp user, MainContext context, UserManager<UserApp> userManager)
+    {
+        var userRoles = await userManager.GetRolesAsync(user);
+        var roles = context.Roles.ToList();
+
+        var rolesDetailed = roles
+            .Where(r => userRoles.Contains(r.Name ?? string.Empty))
+            .Select(r => new RoleDetails(r))
+            .ToList();
+        return rolesDetailed;
+    }
+
 }
 

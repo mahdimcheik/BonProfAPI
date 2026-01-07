@@ -33,16 +33,16 @@ public class StudentService
                     Message = "Profil enseignant non trouv�",
                 };
             }
-            var teacher = await _context
+            var student = await _context
                 .Users
                 .Where(p => p.Id == user.Id)
                 .Include(p => p.Gender)
                 .Include(p => p.Languages)
                 .Include(p => p.Student)
-                // .Include(p => p.Addresses)
+                .Include(p => p.UserRoles)
                 .FirstOrDefaultAsync();
             
-            if (teacher == null)
+            if (student == null)
             {
                 return new Response<UserDetails>
                 {
@@ -50,11 +50,15 @@ public class StudentService
                     Message = "Profil enseignant non trouvé",
                 };
             }
+            // les roles
+
+            var rolesDetailed =  await CheckUser.GetRoles(user, _context,_userManager);
+            
             return new Response<UserDetails>
             {
                 Status = 200,
-                Message = "Profil enseignant r�cup�r� avec succès",
-                Data = new UserDetails(teacher, null),
+                Message = "Profil enseignant récupéré avec succès",
+                Data = new UserDetails(student, rolesDetailed),
             };
         }
         catch (Exception ex)
