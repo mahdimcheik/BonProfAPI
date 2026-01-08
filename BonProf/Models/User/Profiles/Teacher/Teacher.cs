@@ -7,8 +7,6 @@ namespace BonProf.Models;
 
 public class Teacher : BaseModel
 {
-    public string? Title { get; set; }
-    public string? Description { get; set; }
     [Required]
     [ForeignKey(nameof(User))]
     public Guid UserId { get; set; }
@@ -30,11 +28,9 @@ public class Teacher : BaseModel
     }
     
     [SetsRequiredMembers]
-    public Teacher(Guid userId, string?  title, string? description)
+    public Teacher(Guid userId)
     {
         Id =  userId;
         UserId = userId;
-        Title = title;
-        Description = description;
     }
 }

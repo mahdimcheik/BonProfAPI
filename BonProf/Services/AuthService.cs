@@ -15,11 +15,11 @@ namespace BonProf.Services;
 
 public class AuthService
 {
-    private readonly MainContext context;
-    private readonly UserManager<UserApp> userManager;
+    private readonly MainContext _context;
+    private readonly UserManager<UserApp> _userManager;
     private readonly IWebHostEnvironment _env;
-    private readonly MailService mailService;
-    private readonly MinioService minioService;
+    private readonly MailService _mailService;
+    private readonly MinioService _minioService;
 
     public AuthService(
         MainContext context,
@@ -29,11 +29,11 @@ public class AuthService
         MinioService minioService
     )
     {
-        this.context = context;
-        this.userManager = userManager;
+        this._context = context;
+        this._userManager = userManager;
         this._env = env;
-        this.mailService = mailService;
-        this.minioService = minioService;
+        this._mailService = mailService;
+        this._minioService = minioService;
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public class AuthService
     /// <returns>Réponse contenant les informations de l'utilisateur créé</returns>
     public async Task<Response<UserDetails>> Register(UserCreate newUserDTO)
     {
-        var transaction = context.Database.BeginTransaction();
+        var transaction = _context.Database.BeginTransaction();
         try
         {
             // Vérifier le consentement
@@ -76,15 +76,15 @@ public class AuthService
             DateTimeOffset date = DateTimeOffset.UtcNow;
 
             // Tenter de créer un nouvel utilisateur avec le gestionnaire d'utilisateurs
-            IdentityResult result = await userManager.CreateAsync(newUser, newUserDTO.Password);
+            IdentityResult result = await _userManager.CreateAsync(newUser, newUserDTO.Password);
 
             // Tenter d'ajouter l'utilisateur aux rôles spécifiés dans le modèle
-            IdentityResult roleResult = await userManager.AddToRolesAsync(
+            IdentityResult roleResult = await _userManager.AddToRolesAsync(
                 user: newUser,
                 roles: newUserDTO.RoleId == HardCode.ROLE_TEACHER ? ["Teacher"] : ["Student"]
             );
 
-            newUser = await context
+            newUser = await _context
                 .Users.Where(u => u.Id == newUser.Id)
                 .Include(u => u.Status)
                 .Include(x => x.Gender)
@@ -122,7 +122,7 @@ public class AuthService
             }
 
             // Si tout s'est bien déroulé, enregistrer les changements dans le contexte de base de données
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             // creer les profiles
             await CreateProfile(newUser, newUserDTO);
@@ -131,7 +131,7 @@ public class AuthService
             try
             {
                 var confirmationLink = await GenerateAccountConfirmationLink(newUser);
-                await mailService.SendConfirmAccount(newUser, confirmationLink ?? "");
+                await _mailService.SendConfirmAccount(newUser, confirmationLink ?? "");
 
                 // Retourne une réponse avec le statut déterminé, l'identifiant de l'utilisateur, le message de réponse et le statut complet
                 return new Response<UserDetails>
@@ -170,15 +170,15 @@ public class AuthService
         {
             if (userCreate.RoleId == HardCode.ROLE_TEACHER)
             {
-                Teacher newTeacher = new Teacher(newUser.Id, userCreate.Teacher?.Title, userCreate.Teacher?.Description);
-                await context.Teachers.AddAsync(newTeacher);
-                await context.SaveChangesAsync();
+                Teacher newTeacher = new Teacher(newUser.Id);
+                await _context.Teachers.AddAsync(newTeacher);
+                await _context.SaveChangesAsync();
             }
             else
             {
                 Student newStudent = new Student { Id = newUser.Id, UserId = newUser.Id };
-                await context.Students.AddAsync(newStudent);
-                await context.SaveChangesAsync();
+                await _context.Students.AddAsync(newStudent);
+                await _context.SaveChangesAsync();
             }
         }
         catch
@@ -194,13 +194,13 @@ public class AuthService
     /// <returns>Réponse indiquant le succès ou l'échec de la confirmation</returns>
     public async Task<Response<string?>> EmailConfirmation(string userId, string confirmationToken)
     {
-        UserApp user = await userManager.FindByIdAsync(userId);
+        UserApp user = await _userManager.FindByIdAsync(userId);
         if (user is null)
         {
             return new Response<string?> { Message = "Validation échouée", Status = 400 };
         }
 
-        IdentityResult result = await userManager.ConfirmEmailAsync(user, confirmationToken);
+        IdentityResult result = await _userManager.ConfirmEmailAsync(user, confirmationToken);
 
         if (result.Succeeded)
         {
@@ -225,7 +225,7 @@ public class AuthService
         HttpContext httpContext
     )
     {
-        var refreshTokenDB = await context
+        var refreshTokenDB = await _context
             .RefreshTokens.Where(x =>
                 x.Token == refreshToken && x.ExpirationDate > DateTimeOffset.UtcNow
             )
@@ -236,7 +236,7 @@ public class AuthService
             return new Response<Login> { Message = "Token expiré ou non valide", Status = 401 };
         }
 
-        var user = await context
+        var user = await _context
             .Users.Where(u => u.Id == refreshTokenDB.UserId)
             .Include(p => p.Gender)
             .Include(u => u.Teacher)
@@ -245,8 +245,8 @@ public class AuthService
 
         httpContext.Response.Headers.Append(key: "Access-Control-Allow-Credentials", value: "true");
 
-        var userRoles = await userManager.GetRolesAsync(refreshTokenDB.User);
-        var roles = context.Roles.ToList();
+        var userRoles = await _userManager.GetRolesAsync(refreshTokenDB.User);
+        var roles = _context.Roles.ToList();
 
         var rolesDetailed = roles
             .Where(r => userRoles.Contains(r.Name ?? string.Empty))
@@ -273,12 +273,12 @@ public class AuthService
     /// <returns>Réponse contenant les informations de récupération</returns>
     public async Task<Response<PasswordReset>> ForgotPassword(ForgotPassword model)
     {
-        var user = await userManager.FindByEmailAsync(model.Email);
+        var user = await _userManager.FindByEmailAsync(model.Email);
         if (user != null)
         {
             try
             {
-                var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
+                var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                 resetToken = HttpUtility.UrlEncode(resetToken);
 
                 var resetLink =
@@ -337,13 +337,13 @@ public class AuthService
     /// <returns>Réponse indiquant le succès ou l'échec du changement</returns>
     public async Task<Response<string?>> ChangePassword(PasswordRecovery model)
     {
-        UserApp? user = await userManager.FindByIdAsync(model.UserId);
+        UserApp? user = await _userManager.FindByIdAsync(model.UserId);
         if (user is null)
         {
             return new Response<string?> { Message = "L'utilisateur n'existe pas", Status = 404 };
         }
 
-        IdentityResult result = await userManager.ResetPasswordAsync(
+        IdentityResult result = await _userManager.ResetPasswordAsync(
             user: user,
             token: model.ResetToken,
             newPassword: model.Password
@@ -376,7 +376,7 @@ public class AuthService
     public async Task<Response<Login>> Login(UserLogin model, HttpResponse response)
     {
         //var user = await userManager.FindByEmailAsync(model.Email);
-        var user = await context
+        var user = await _context
             .Users.Where(u => u.UserName.ToLower() == model.Email)
             .Include(p => p.Gender)
             .Include(u => u.Teacher)
@@ -388,8 +388,8 @@ public class AuthService
             return new Response<Login> { Message = "L'utilisateur n'existe pas ", Status = 404 };
         }
 
-        var result = await userManager.CheckPasswordAsync(user: user, password: model.Password);
-        if (!userManager.CheckPasswordAsync(user: user, password: model.Password).Result)
+        var result = await _userManager.CheckPasswordAsync(user: user, password: model.Password);
+        if (!_userManager.CheckPasswordAsync(user: user, password: model.Password).Result)
         {
             return new Response<Login> { Message = "Connexion échouée", Status = 401 };
         }
@@ -397,11 +397,11 @@ public class AuthService
         // à la connection, je crée ou je met à jour le refreshtoken
         var refreshToken = await CreateOrUpdateTokenAsync(user, forceReset: true);
 
-        await context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
         // to allow cookies sent from the front end
         response.Headers.Append(key: "Access-Control-Allow-Credentials", value: "true");
-        var userRoles = await userManager.GetRolesAsync(user);
-        var roles = context.Roles.ToList();
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var roles = _context.Roles.ToList();
 
         var rolesDetailed = roles
             .Where(r => userRoles.Contains(r.Name ?? string.Empty))
@@ -439,7 +439,7 @@ public class AuthService
     )
     {
         // à la connection, je crée ou je met à jour le refreshtoken
-        var refreshToken = context.RefreshTokens.FirstOrDefault(x => x.UserId == user.Id);
+        var refreshToken = _context.RefreshTokens.FirstOrDefault(x => x.UserId == user.Id);
 
         if (refreshToken is null)
         {
@@ -452,7 +452,7 @@ public class AuthService
                     EnvironmentVariables.COOKIES_VALIDITY_DAYS
                 ),
             };
-            context.RefreshTokens.Add(refreshToken);
+            _context.RefreshTokens.Add(refreshToken);
         }
         else if (forceReset)
         {
@@ -462,18 +462,18 @@ public class AuthService
             );
         }
 
-        await context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
 
         return refreshToken;
     }
 
     private async Task<RefreshToken?> RenewRefreshTokenAsync(UserApp user)
     {
-        var refreshToken = context.RefreshTokens.FirstOrDefault(x => x.UserId == user.Id);
+        var refreshToken = _context.RefreshTokens.FirstOrDefault(x => x.UserId == user.Id);
 
         if (refreshToken is null)
         {
-            context.RefreshTokens.Add(
+            _context.RefreshTokens.Add(
                 new RefreshToken
                 {
                     Id = Guid.NewGuid(),
@@ -494,7 +494,7 @@ public class AuthService
             );
         }
 
-        await context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
 
         return refreshToken;
     }
@@ -514,7 +514,7 @@ public class AuthService
             algorithm: SecurityAlgorithms.HmacSha256
         );
 
-        var userRoles = await userManager.GetRolesAsync(user);
+        var userRoles = await _userManager.GetRolesAsync(user);
 
         var authClaims = new List<Claim>
         {
@@ -535,14 +535,14 @@ public class AuthService
             signingCredentials: credentials
         );
 
-        context.Entry(user).State = EntityState.Modified;
+        _context.Entry(user).State = EntityState.Modified;
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
     private async Task<string?> GenerateAccountConfirmationLink(UserApp user)
     {
-        var confirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         confirmationToken = HttpUtility.UrlEncode(confirmationToken);
 
         var confirmationLink =
@@ -557,7 +557,7 @@ public class AuthService
 
     private async Task<bool> IsEmailAlreadyUsedAsync(string email)
     {
-        var existingUser = await userManager.FindByEmailAsync(email);
+        var existingUser = await _userManager.FindByEmailAsync(email);
         return existingUser != null;
     }
 
@@ -571,7 +571,7 @@ public class AuthService
         {
             return new Response<FileUrl> { Message = "Aucun fichier téléversé", Status = 400 };
         }
-        var user = CheckUser.GetUserFromClaim(UserPrincipal, context);
+        var user = CheckUser.GetUserFromClaim(UserPrincipal, _context);
         if (user is null)
         {
             return new Response<FileUrl> { Status = 40, Message = "Demande refusée" };
@@ -621,10 +621,10 @@ public class AuthService
         outputStream.Seek(0, SeekOrigin.Begin);
 
         // minio
-        var url = await minioService.UploadFileAsync("avatars", file.FileName, file);
+        var url = await _minioService.UploadFileAsync("avatars", file.FileName, file);
         //user.ImgUrl = url.ObjectName;
 
-        await context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
 
         //var imgUrl = await minioService.GetFileUrlAsync(user.ImgUrl);
 

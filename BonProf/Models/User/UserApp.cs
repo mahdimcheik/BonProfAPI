@@ -23,6 +23,9 @@ public class UserApp : IdentityUser<Guid>, IArchivable, IUpdateable, ICreatable
 
     [MaxLength(500)]
     public string? ImgUrl { get; set; }
+    
+    public string? Title { get; set; }
+    public string? Description { get; set; }
     [Required]
     public required bool DataProcessingConsent { get; set; } = false;
 
@@ -66,6 +69,8 @@ public class UserApp : IdentityUser<Guid>, IArchivable, IUpdateable, ICreatable
         UserName = newUser.Email;
         Email = newUser.Email;
         FirstName = newUser.FirstName;
+        Title = newUser.Title;
+        Description =  newUser.Description;
         LastName = newUser.LastName;
         GenderId  = newUser.GenderId;
         DataProcessingConsent = true;
