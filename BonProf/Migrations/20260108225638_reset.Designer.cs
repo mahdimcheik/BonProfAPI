@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BonProf.Migrations
 {
     [DbContext(typeof(MainContext))]
-    [Migration("20260108210246_reset")]
+    [Migration("20260108225638_reset")]
     partial class reset
     {
         /// <inheritdoc />
