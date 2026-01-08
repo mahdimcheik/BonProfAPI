@@ -32,4 +32,4 @@ jobs:
           key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
           script: |
             docker pull mahdimcheik/bonprof:latest
-            docker compose -f ~/bonprof/docker-compose.yml up -d --force-recreate
+            docker compose -f ~/bonprof/back-end/docker-compose.yml up -d --force-recreate
