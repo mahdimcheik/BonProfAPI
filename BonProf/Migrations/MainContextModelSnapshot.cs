@@ -277,9 +277,6 @@ namespace BonProf.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<Guid>("TeacherId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -288,14 +285,12 @@ namespace BonProf.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("UserAppId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TeacherId");
-
-                    b.HasIndex("UserAppId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Formations");
                 });
@@ -1647,17 +1642,13 @@ namespace BonProf.Migrations
 
             modelBuilder.Entity("BonProf.Models.Formation", b =>
                 {
-                    b.HasOne("BonProf.Models.Teacher", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId")
+                    b.HasOne("BonProf.Models.UserApp", "User")
+                        .WithMany("Formations")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BonProf.Models.UserApp", null)
-                        .WithMany("Formations")
-                        .HasForeignKey("UserAppId");
-
-                    b.Navigation("Teacher");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BonProf.Models.Language", b =>

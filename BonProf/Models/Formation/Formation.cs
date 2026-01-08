@@ -28,21 +28,21 @@ public class Formation : BaseModel
     public DateTimeOffset? DateTo { get; set; }
 
     [Required]
-    [ForeignKey(nameof(Teacher))]
-    public Guid TeacherId { get; set; }
-    public Teacher? Teacher { get; set; }
+    [ForeignKey(nameof(User))]
+    public Guid UserId { get; set; }
+    public UserApp? User { get; set; }
 
     public Formation() { }
 
     [SetsRequiredMembers]
-    public Formation(FormationCreate newFormation)
+    public Formation(FormationCreate newFormation, Guid userId)
     {
         Title = newFormation.Title;
         Institute = newFormation.Institute;
         Description = newFormation.Description;
         DateFrom = newFormation.DateFrom;
         DateTo = newFormation.DateTo;
-        TeacherId = newFormation.TeacherId;
+        UserId = userId;
     }
 
     public void UpdateFormation(FormationUpdate formationUpdate)

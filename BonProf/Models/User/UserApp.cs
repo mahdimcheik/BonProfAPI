@@ -72,6 +72,7 @@ public class UserApp : IdentityUser<Guid>, IArchivable, IUpdateable, ICreatable
         Title = newUser.Title;
         Description =  newUser.Description;
         LastName = newUser.LastName;
+        DateOfBirth = newUser.DateOfBirth;
         GenderId  = newUser.GenderId;
         DataProcessingConsent = true;
         PrivacyPolicyConsent = true;
