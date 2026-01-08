@@ -25,10 +25,10 @@ public static class CorsHelper
                     $"test.${EnvironmentVariables.API_BACK_URL}",
                     $"dev.${EnvironmentVariables.API_BACK_URL}",
                     "https://recette-tpeweb.e-transactions.fr",
-                    "http://www.skill-hive.fr",
-                    "https://www.skill-hive.fr",
-                    "http://skill-hive.fr",
-                    "https://skill-hive.fr",
+                    "http://www.bonprof.fr",
+                    "https://www.bonprof.fr",
+                    "http://bonprof.fr",
+                    "https://bonprof.fr",
             };
         return localUrls.Contains(origin);
     }
