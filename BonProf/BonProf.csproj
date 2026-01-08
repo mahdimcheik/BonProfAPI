@@ -70,6 +70,14 @@
   <ItemGroup>
     <Content Include="properties\launchSettings.template.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\Templates\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="\Templates\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Hangfire" Version="1.8.22" />
