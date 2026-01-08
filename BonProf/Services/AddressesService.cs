@@ -6,16 +6,9 @@ using System.Security.Claims;
 
 namespace BonProf.Services;
 
-/// <summary>
-/// Service pour la gestion des adresses
-/// </summary>
+
 public class AddressesService(MainContext context)
 {
-    /// <summary>
-    /// Récupère les adresses d'un utilisateur
-    /// </summary>
-    /// <param name="userId">Identifiant de l'utilisateur</param>
-    /// <returns>Liste des adresses de l'utilisateur</returns>
     public async Task<Response<List<AddressDetails>>> GetAddressesByUserIdAsync(ClaimsPrincipal principal)
     {
         try
@@ -65,11 +58,6 @@ public class AddressesService(MainContext context)
         }
     }
 
-    /// <summary>
-    /// Crée une nouvelle adresse
-    /// </summary>
-    /// <param name="addressDto">Données de l'adresse à créer</param>
-    /// <returns>Adresse créée</returns>
     public async Task<Response<AddressDetails>> CreateAddressAsync(AddressCreate addressDto, ClaimsPrincipal User)
     {
         try
@@ -131,14 +119,6 @@ public class AddressesService(MainContext context)
         }
     }
 
-
-
-    /// <summary>
-    /// Met à jour une adresse existante
-    /// </summary>
-    /// <param name="id">Identifiant de l'adresse</param>
-    /// <param name="addressDto">Nouvelles données de l'adresse</param>
-    /// <returns>Adresse mise à jour</returns>
     public async Task<Response<AddressDetails>> UpdateAddressAsync(AddressUpdate addressDto, ClaimsPrincipal User)
     {
         try
@@ -167,21 +147,8 @@ public class AddressesService(MainContext context)
                     Data = null
                 };
             }
-            var profile = await context.Users.FirstOrDefaultAsync(p => p.Id == user.Id);
-            if (profile is null)
-            {
-                return new Response<AddressDetails>
-                {
-                    Status = 404,
-                    Message = "Utilisateur non trouvé",
-                    Data = null
-                };
-            }
-            addressDto.ProfileId = profile.Id;
             address.UpdateAddress(addressDto);
-
             await context.SaveChangesAsync();
-
             return new Response<AddressDetails>
             {
                 Status = 200,
@@ -200,11 +167,6 @@ public class AddressesService(MainContext context)
         }
     }
 
-    /// <summary>
-    /// Archive une adresse (suppression logique)
-    /// </summary>
-    /// <param name="id">Identifiant de l'adresse</param>
-    /// <returns>Résultat de l'opération</returns>
     public async Task<Response<object>> DeleteAddressAsync(Guid id, ClaimsPrincipal principal)
     {
         try

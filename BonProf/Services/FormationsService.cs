@@ -8,15 +8,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BonProf.Services;
 
-/// <summary>
-/// Service pour la gestion des formations
-/// </summary>
 public class FormationsService(MainContext context)
 {
-    /// <summary>
-    /// Récupère toutes les formations
-    /// </summary>
-    /// <returns>Liste des formations</returns>
+
     public async Task<Response<List<FormationDetails>>> GetAllFormationsAsync()
     {
         try
@@ -47,11 +41,7 @@ public class FormationsService(MainContext context)
         }
     }
 
-    /// <summary>
-    /// Récupère une formation par son identifiant
-    /// </summary>
-    /// <param name="id">Identifiant de la formation</param>
-    /// <returns>Formation trouvée</returns>
+
     public async Task<Response<FormationDetails>> GetFormationByIdAsync(Guid id)
     {
         try
@@ -88,18 +78,14 @@ public class FormationsService(MainContext context)
         }
     }
 
-    /// <summary>
-    /// Récupère les formations d'un utilisateur
-    /// </summary>
-    /// <param name="userId">Identifiant de l'utilisateur</param>
-    /// <returns>Liste des formations de l'utilisateur</returns>
+ 
     public async Task<Response<List<FormationDetails>>> GetFormationsByUserIdAsync(Guid userId)
     {
         try
         {
             var formations = await context
                 .Formations.AsNoTracking()
-                .Where(f => f.TeacherId == userId && f.ArchivedAt == null)
+                .Where(f => f.UserId == userId && f.ArchivedAt == null)
                 .OrderByDescending(f => f.DateFrom)
                 .Select(f => new FormationDetails(f))
                 .ToListAsync();
@@ -124,11 +110,7 @@ public class FormationsService(MainContext context)
         }
     }
 
-    /// <summary>
-    /// Crée une nouvelle formation
-    /// </summary>
-    /// <param name="formationDto">Données de la formation à créer</param>
-    /// <returns>Formation créée</returns>
+
     public async Task<Response<FormationDetails>> CreateFormationAsync(
         FormationCreate formationDto,
         ClaimsPrincipal User
@@ -136,12 +118,8 @@ public class FormationsService(MainContext context)
     {
         try
         {
-            var teacher = CheckUser.GetUserFromClaim(User, context);
-            if (teacher is not null)
-            {
-                formationDto.TeacherId = teacher.Id;
-            }
-            else
+            var user = CheckUser.GetUserFromClaim(User, context);
+            if (user is null)
             {
                 return new Response<FormationDetails>
                 {
@@ -162,7 +140,18 @@ public class FormationsService(MainContext context)
                 };
             }
 
-            var formation = new Formation(formationDto);
+            var count = await context.Formations.Where(f => f.UserId == user.Id && f.ArchivedAt == null).CountAsync();
+            if (count >= 5)
+            {
+                return new Response<FormationDetails>
+                {
+                    Status = 403,
+                    Message = "Le nombre maximal de formations autorisé par utilisateur est de 5",
+                    Data = null,
+                };
+            }
+
+            var formation = new Formation(formationDto, user.Id);
 
             context.Formations.Add(formation);
             await context.SaveChangesAsync();
@@ -185,18 +174,22 @@ public class FormationsService(MainContext context)
         }
     }
 
-    /// <summary>
-    /// Met à jour une formation existante
-    /// </summary>
-    /// <param name="id">Identifiant de la formation</param>
-    /// <param name="formationDto">Nouvelles données de la formation</param>
-    /// <returns>Formation mise à jour</returns>
     public async Task<Response<FormationDetails>> UpdateFormationAsync(FormationUpdate formationDto, ClaimsPrincipal User)
     {
         try
         {
+            var user = CheckUser.GetUserFromClaim(User, context);
+            if (user is  null)
+            {
+                return new Response<FormationDetails>
+                {
+                    Status = 404,
+                    Message = "Utilisateur non trouvé",
+                    Data = null,
+                };
+            }
             var formation = await context.Formations.FirstOrDefaultAsync(f =>
-                f.Id == formationDto.Id && f.ArchivedAt == null
+                f.Id == formationDto.Id && f.UserId == user.Id && f.ArchivedAt == null
             );
 
             if (formation == null)
@@ -208,21 +201,6 @@ public class FormationsService(MainContext context)
                     Data = null,
                 };
             }
-            var teacher = CheckUser.GetUserFromClaim(User, context);
-            if (teacher is not null)
-            {
-                formationDto.TeacherId = teacher.Id;
-            }
-            else
-            {
-                return new Response<FormationDetails>
-                {
-                    Status = 404,
-                    Message = "Utilisateur non trouvé",
-                    Data = null,
-                };
-            }
-
             // Validation des dates
             if (formationDto.DateTo.HasValue && formationDto.DateTo <= formationDto.DateFrom)
             {

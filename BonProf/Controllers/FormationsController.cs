@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BonProf.Models;
 using BonProf.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BonProf.Controllers;
 
@@ -53,6 +54,7 @@ public class FormationsController(FormationsService formationsService) : Control
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<Response<FormationDetails>>> CreateFormation(
         [FromBody] FormationCreate formationDto)
     {

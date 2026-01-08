@@ -17,6 +17,10 @@ public class UserDetails
     public required string FirstName { get; set; } 
 
     public required string LastName { get; set; } 
+    
+    public string? Title { get; set; }
+
+    public string? Description { get; set; }
 
     public string? ImgUrl { get; set; }
 
@@ -39,6 +43,8 @@ public class UserDetails
         Email = user.Email ?? user.UserName ?? "";
         FirstName = user.FirstName;
         LastName = user.LastName;
+        Title = user.Title;
+        Description = user.Description;
         DateOfBirth = user.DateOfBirth;
         
         Roles = roles;
@@ -87,6 +93,12 @@ public class UserCreate
     [Required]
     [MaxLength(64)]
     public string LastName { get; set; } = string.Empty;
+    
+    [StringLength(200, ErrorMessage = "Le titre ne peut pas d�passer 200 caract�res")]
+    public string? Title { get; set; }
+
+    [StringLength(1000, ErrorMessage = "La description ne peut pas d�passer 1000 caract�res")]
+    public string? Description { get; set; }
     
     [Required]
     [EmailAddress]
@@ -179,6 +191,12 @@ public class UserUpdate
     [Required]
     [MaxLength(64)]
     public string LastName { get; set; } = string.Empty;
+    
+    [StringLength(200, ErrorMessage = "Le titre ne peut pas d�passer 200 caractères")]
+    public string? Title { get; set; }
+
+    [StringLength(1000, ErrorMessage = "La description ne peut pas d�passer 1000 caractères")]
+    public string? Description { get; set; }
 
     [Required]
     public required DateTimeOffset DateOfBirth { get; set; }
@@ -192,6 +210,8 @@ public class UserUpdate
     {
         user.FirstName = FirstName;
         user.LastName = LastName;
+        user.Title = Title;
+        user.Description = Description;
         user.DateOfBirth =  DateOfBirth;
         user.GenderId = GenderId;
         user.Languages.Clear();
