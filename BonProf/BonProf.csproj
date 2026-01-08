@@ -56,6 +56,15 @@
     <Content Remove="C:\Users\mahdi\.nuget\packages\microsoft.codeanalysis.workspaces.msbuild\4.14.0\contentFiles\any\any\BuildHost-netcore\tr\System.CommandLine.resources.dll" />
     <Content Remove="C:\Users\mahdi\.nuget\packages\microsoft.codeanalysis.workspaces.msbuild\4.14.0\contentFiles\any\any\BuildHost-netcore\zh-Hans\System.CommandLine.resources.dll" />
     <Content Remove="C:\Users\mahdi\.nuget\packages\microsoft.codeanalysis.workspaces.msbuild\4.14.0\contentFiles\any\any\BuildHost-netcore\zh-Hant\System.CommandLine.resources.dll" />
+    <Content Update="wwwroot\Templates\ConfirmAccountTemplate.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Templates\ForgotPasswordTemplate.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Templates\ReminderTemplate.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -101,6 +110,12 @@
 
   <ItemGroup>
     <Folder Include="Models\Payment\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="wwwroot\Templates\ConfirmAccountTemplate.cshtml" />
+    <AdditionalFiles Include="wwwroot\Templates\ForgotPasswordTemplate.cshtml" />
+    <AdditionalFiles Include="wwwroot\Templates\ReminderTemplate.cshtml" />
   </ItemGroup>
 
 </Project>
