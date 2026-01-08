@@ -140,6 +140,17 @@ public class FormationsService(MainContext context)
                 };
             }
 
+            var count = await context.Formations.Where(f => f.UserId == user.Id && f.ArchivedAt == null).CountAsync();
+            if (count >= 5)
+            {
+                return new Response<FormationDetails>
+                {
+                    Status = 403,
+                    Message = "Le nombre maximal de formations autorisé par utilisateur est de 5",
+                    Data = null,
+                };
+            }
+
             var formation = new Formation(formationDto, user.Id);
 
             context.Formations.Add(formation);
