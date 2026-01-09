@@ -13,6 +13,7 @@ using BonProf.Utilities;
 using System.Text;
 using BonProf.Services;
 using BonProf.Services.Interfaces;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,11 @@ var services = builder.Services;
 ConfigureServices(services);
 
 var app = builder.Build();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 // Apply database migrations
 using (var scope = app.Services.CreateScope())
