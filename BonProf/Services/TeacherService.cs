@@ -5,6 +5,7 @@ using BonProf.Models;
 using BonProf.Utilities;
 using System;
 using System.Security.Claims;
+using BonProf.Models.Filters;
 
 namespace BonProf.Services;
 
@@ -25,23 +26,71 @@ public class TeacherService
     /// <summary>
     /// R�cup�re tous les profils enseignants
     /// </summary>
-    public async Task<Response<List<UserDetails>>> GetAllTeacherProfilesAsync()
+    public async Task<Response<List<UserDetails>>> GetAllTeacherProfilesAsync(FilterTeacher filters)
     {
         try
         {
-            var profiles = await _context
+            var query =  _context
                 .Users
                 .Include(p => p.Teacher)
-                .ThenInclude(t => t.Cursuses)
-                .Include(p => p.Languages)
-                .Include(p => p.Gender)
-                .ToListAsync();
+                .Where(u => u.Teacher != null && u.ArchivedAt == null);
+
+            if (filters.FullName is not null)
+            {
+                query = query.Where(u =>
+                    (u.FirstName + " " + u.LastName).Contains(filters.FullName) ||
+                    (u.LastName + " " +u.FirstName).Contains(filters.FullName));
+            }
+
+            if (filters.PostalCode is not null)
+            {
+                query = query
+                    .Include(u => u.Addresses)
+                    .Where(u => u.Addresses.Any(a => a.TypeId == HardCode.TYPE_ADDRESS_MAIN && a.ZipCode == filters.PostalCode));
+            }
+            
+            if (filters.City is not null)
+            {
+                query = query
+                    .Include(u => u.Addresses)
+                    .Where(u => u.Addresses.Any(a => a.TypeId == HardCode.TYPE_ADDRESS_MAIN && a.City.ToLower().Contains(filters.City.ToLower())));
+            }
+
+            if (filters.CategoryIds is not null && filters.CategoryIds.Count > 0)
+            {
+                query= query.Include(u => u.Teacher)
+                    .ThenInclude(t => t.Cursuses)
+                    .ThenInclude(c => c.Categories)
+                    .Where(u => u.Teacher.Cursuses.Any(c => filters.CategoryIds.Contains(c.Id)));
+            }
+            
+            if (filters.LevelIds is not null && filters.LevelIds.Count > 0)
+            {
+                query= query.Include(u => u.Teacher)
+                    .ThenInclude(t => t.Cursuses)
+                    .ThenInclude(c => c.Level)
+                    .Where(u => u.Teacher.Cursuses.Any(c => filters.LevelIds.Contains(c.LevelId)));
+            }
+
+            if (filters.Row != 0 && filters.First < filters.Row)
+            {
+                query = query.Skip(filters.First).Take(filters.Row ?? 10);
+            }
+            else
+            {
+                query = query.Skip(0).Take(10);
+            }
+
+            var toto = query.ToQueryString();
+
+            var count = await query.CountAsync();
 
             return new Response<List<UserDetails>>
             {
                 Status = 200,
                 Message = "Profils enseignants r�cup�r�s avec succ�s",
-                Data = profiles.Select(p => new UserDetails(p, null)).ToList(),
+                Data = query.Select(p => new UserDetails(p, null)).ToList(),
+                Count = count
             };
         }
         catch (Exception ex)

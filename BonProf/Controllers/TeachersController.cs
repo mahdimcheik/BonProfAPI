@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using BonProf.Models;
+using BonProf.Models.Filters;
 using BonProf.Services;
+using BonProf.Utilities;
 
 namespace BonProf.Controllers;
 
@@ -19,10 +21,10 @@ public class TeachersController : ControllerBase
     {
         _teacherProfileService = teacherProfileService;
     }
-    [HttpGet("all")]
-    public async Task<ActionResult<Response<List<UserDetails>>>> GetAllTeacherProfiles()
+    [HttpPost("all")]
+    public async Task<ActionResult<Response<List<UserDetails>>>> GetAllTeacherProfiles([FromBody]FilterTeacher filters)
     {
-        var response = await _teacherProfileService.GetAllTeacherProfilesAsync();
+        var response = await _teacherProfileService.GetAllTeacherProfilesAsync(filters);
 
         if (response.Status == 200)
         {
