@@ -355,7 +355,8 @@ static void InitialToken(IServiceProvider serviceProvider)
     // Exécution immédiate au démarrage
     try
     {
-        tokenService.GetAsync("BonProf").Wait();
+        // TODO uncomment this
+        // tokenService.GetAsync("BonProf").Wait();
     }
     catch (Exception ex)
     {
@@ -365,7 +366,7 @@ static void InitialToken(IServiceProvider serviceProvider)
     // Job récurrent Hangfire
     recurringJobManager.AddOrUpdate<TokenService>(
         "RefreshFilerToken",
-        service => service.RefreshAsync("BonProf"),
+        service =>    service.RefreshAsync("BonProf"),
         Cron.Daily(1) // 01:00
     );
 }

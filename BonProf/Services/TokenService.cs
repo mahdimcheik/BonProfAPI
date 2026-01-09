@@ -52,6 +52,7 @@ public class TokenService : ITokenService
     public async Task RefreshAsync(string serviceName)
     {
         _logger.LogInformation("Refreshing token for service {ServiceName}", serviceName);
-        await GetAsync(serviceName);
+        // TODO uncomment this
+        // await GetAsync(serviceName); 
     }
 }
